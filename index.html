@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Path Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+        }
+        .paths {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .path {
+            margin: 10px;
+            padding: 20px;
+            background-color: #add8e6;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .path img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+        .outcome-image {
+            display: none;
+            max-width: 300px;
+            height: auto;
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Welcome to 'Find the Path'!</h1>
+<p id="introText">You are standing at a Victorian English train station. There are five paths before you.</p>
+<img id="trainStationImage" src="images/trainstation.jpg" alt="Train Station Image">
+
+<div class="paths" id="pathsContainer">
+    <div class="path" onclick="choosePath(1)">
+        <img src="images/path1.jpg" alt="Path 1">
+        Path 1
+    </div>
+    <div class="path" onclick="choosePath(2)">
+        <img src="images/path2.jpg" alt="Path 2">
+        Path 2
+    </div>
+    <div class="path" onclick="choosePath(3)">
+        <img src="images/path3.jpg" alt="Path 3">
+        Path 3
+    </div>
+    <div class="path" onclick="choosePath(4)">
+        <img src="images/path4.jpg" alt="Path 4">
+        Path 4
+    </div>
+    <div class="path" onclick="choosePath(5)">
+        <img src="images/path5.jpg" alt="Path 5">
+        Path 5
+    </div>
+</div>
+
+<p id="result"></p>
+<img id="coastImage" class="outcome-image" src="images/coast.jpg" alt="Coast Image">
+<img id="deadEndImage" class="outcome-image" src="images/deadend1.jpg" alt="Dead End Image">
+<img id="countrysideImage" class="outcome-image" src="images/countryside.jpg" alt="Countryside Image">
+<img id="factoryImage" class="outcome-image" src="images/factory.jpg" alt="Factory Image">
+<button id="playAgainButton" onclick="playAgain()">Play Again</button>
+
+<script>
+    let paths = [];
+    let outcomes = ['dead end', 'dead end', 'coast', 'countryside', 'factory'];
+    let deadEndImages = ['images/deadend1.jpg', 'images/deadend2.jpg'];
+    let hasStarted = false;
+
+    function randomizePaths() {
+        paths = [...outcomes];
+        for (let i = paths.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [paths[i], paths[j]] = [paths[j], paths[i]];
+        }
+    }
+
+    function choosePath(choice) {
+        let result = document.getElementById('result');
+        let deadEndImage = document.getElementById('deadEndImage');
+        let coastImage = document.getElementById('coastImage');
+        let countrysideImage = document.getElementById('countrysideImage');
+        let factoryImage = document.getElementById('factoryImage');
+        let trainStationImage = document.getElementById('trainStationImage');
+        let pathsContainer = document.getElementById('pathsContainer');
+        let introText = document.getElementById('introText');
+        let playAgainButton = document.getElementById('playAgainButton');
+
+        if (!hasStarted) {
+            trainStationImage.style.display = 'none';
+            pathsContainer.style.display = 'flex';
+            introText.style.display = 'none';
+            hasStarted = true;
+            randomizePaths();
+        }
+
+        deadEndImage.style.display = 'none';
+        coastImage.style.display = 'none';
+        countrysideImage.style.display = 'none';
+        factoryImage.style.display = 'none';
+
+        let outcome = paths[choice - 1];
+        if (outcome === 'dead end') {
+            result.textContent = "Oh no! You've reached a dead end. Try again!";
+            deadEndImage.src = deadEndImages[Math.floor(Math.random() * deadEndImages.length)];
+            deadEndImage.style.display = 'block';
+        } else if (outcome === 'coast') {
+            result.textContent = "Congratulations! You've reached the coast, enjoy.";
+            coastImage.style.display = 'block';
+        } else if (outcome === 'countryside') {
+            result.textContent = "Congratulations! You've reached the countryside, and it's tea time!";
+            countrysideImage.style.display = 'block';
+        } else if (outcome === 'factory') {
+            result.textContent = "Sorry, you have to work harder!";
+            factoryImage.style.display = 'block';
+        }
+
+        playAgainButton.style.display = 'block';
+    }
+
+    function playAgain() {
+        document.getElementById('result').textContent = "Choose another path!";
+        document.getElementById('pathsContainer').style.display = 'flex';
+        document.getElementById('trainStationImage').style.display = 'none';
+        document.getElementById('introText').style.display = 'none';
+        document.getElementById('deadEndImage').style.display = 'none';
+        document.getElementById('coastImage').style.display = 'none';
+        document.getElementById('countrysideImage').style.display = 'none';
+        document.getElementById('factoryImage').style.display = 'none';
+        document.getElementById('playAgainButton').style.display = 'none';
+        hasStarted = false;
+    }
+
+    // Initialize paths and hide the play again button
+    randomizePaths();
+    document.getElementById('playAgainButton').style.display = 'none';
+</script>
+
+</body>
+</html>
